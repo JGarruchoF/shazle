@@ -63,12 +63,19 @@ function guessYear(guess: string) {
 
 <template>
   <div class="container">
-    <template v-if="!loadingDetect && !trackStore.releaseDate">
-      <h1>Escanea una cancion para comenzar</h1>
-      <button v-if="isRecording" @click="stopRecording">Parar de escanear</button>
-      <button v-else @click="startRecording">Escanear</button>
+    <template v-if="!trackStore.releaseDate">
+      <div class="mb-8">
+        <h1 class="text-center">Escanea una cancion para comenzar</h1>
+      </div>
+      <button v-if="loadingDetect" class="scan-button">Cargando...</button>
+      <button
+        v-else
+        class="scan-button"
+        @click="() => (isRecording ? stopRecording() : startRecording())"
+      >
+        {{ isRecording ? 'Escuchando...' : 'Escanear' }}
+      </button>
     </template>
-    <div v-else-if="loadingDetect">Cargando...</div>
     <template v-else>
       <h1>¡Listo!</h1>
       <h2>¿De qué año es la cancion que estás escuchando?</h2>
@@ -100,5 +107,28 @@ function guessYear(guess: string) {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+.scan-button {
+  width: 150px;
+  height: 150px;
+  background: linear-gradient(145deg, #0c1c2d, #0d0d0d); /* Darker gradient */
+  border: none;
+  border-radius: 50%;
+  box-shadow:
+    0 0 30px rgba(255, 255, 255, 0.1),
+    0 0 20px rgba(15, 169, 255, 0.4); /* All-around shadow */
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  outline: none;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.3s ease;
+}
+.mb-8 {
+  margin-bottom: 24px;
+}
+.text-center {
+  text-align: center;
 }
 </style>
