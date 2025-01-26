@@ -24,7 +24,7 @@ export default function useRecord() {
 
   function onStop(event: Event) {
     isRecording.value = false
-    audioChunks.value = chunks
+    audioChunks.value = [...chunks]
   }
   function stopRecording() {
     mediaRecorder.value?.stop()

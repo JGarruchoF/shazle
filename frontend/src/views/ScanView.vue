@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, nextTick } from 'vue'
+import { ref, watch, onBeforeUnmount, nextTick } from 'vue'
 import router from '@/router'
 import useRecord from '@/composables/use-record'
 import ShazamService from '@/services/shazam'
@@ -13,28 +13,59 @@ const { isRecording, startRecording, stopRecording, audioChunks } = useRecord()
 
 const shazamService = new ShazamService()
 
-watch(isRecording, async (value) => {
-  await nextTick()
-  if (!value) {
-    sendAudio(audioChunks.value)
+const recordingInterval = ref<number | undefined>(undefined)
+
+watch(audioChunks, async (value) => {
+  if (value.length > 10) {
+    clearInterval(recordingInterval.value)
+    return
+  } else {
+    sendAudio(value[value.length - 1])
   }
 })
 
+function onClickRecord() {
+  startRecording()
+  recordingInterval.value = setInterval(async () => {
+    stopRecording()
+    startRecording()
+  }, 4000)
+}
+
 const loadingDetect = ref(false)
 
-async function sendAudio(audioChunks: Blob[]) {
+const queryParams: {
+  identifier: string | undefined
+  timestamp: number | undefined
+  samplems: string | undefined
+} = {
+  identifier: undefined,
+  timestamp: undefined,
+  samplems: undefined,
+}
+
+async function sendAudio(audioChunk: Blob) {
   loadingDetect.value = true
+
   try {
-    const audioBase64 = await audioChunksToBase64(audioChunks)
-    const response = await shazamService.detect(audioBase64)
+    const audioBase64 = await audioChunksToBase64([audioChunk])
+    const response = await shazamService.detect(audioBase64, queryParams)
+    queryParams.identifier = response.tagid
+    queryParams.timestamp = response.timestamp
+
     if (response.matches.length > 0) {
       trackStore.setTrack(response.track)
+      clearInterval(recordingInterval.value)
       router.push('/guess')
     }
   } finally {
     loadingDetect.value = false
   }
 }
+
+onBeforeUnmount(() => {
+  clearInterval(recordingInterval.value)
+})
 </script>
 
 <template>
@@ -42,12 +73,7 @@ async function sendAudio(audioChunks: Blob[]) {
     <div>
       <h1 class="text-center">Escanea una cancion para comenzar</h1>
     </div>
-    <button v-if="loadingDetect" class="scan-button">Cargando...</button>
-    <button
-      v-else
-      class="scan-button"
-      @click="() => (isRecording ? stopRecording() : startRecording())"
-    >
+    <button class="scan-button" @click="onClickRecord">
       {{ isRecording ? 'Escuchando...' : 'Escanear' }}
     </button>
   </div>
