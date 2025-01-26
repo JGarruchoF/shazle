@@ -74,6 +74,8 @@ async function sendAudio(audioChunks: Blob[]) {
   position: relative;
   overflow: hidden;
   outline: none;
+  color: white;
+  font-size: 1rem;
   transition:
     transform 0.2s ease,
     box-shadow 0.3s ease;
