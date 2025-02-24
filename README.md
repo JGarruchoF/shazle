@@ -19,6 +19,12 @@ cd shazle
 npm install
 ```
 
+4. Create a `.env` file in the backend directory and add your apidojo's Shazam API key from (RapidAPI)[https://rapidapi.com/apidojo/api/shazam] :
+
+```bash
+SHAZAM_API_KEY=your_shazam_api_key
+```
+
 ## Usage
 
 To start playing Shazle, you need to start both the backend and frontend. Run the following commands in separate terminal windows:
