@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, onBeforeUnmount, nextTick } from 'vue'
+import { ref, watch, onBeforeUnmount } from 'vue'
 import router from '@/router'
 import useRecord from '@/composables/use-record'
 import ShazamService from '@/services/shazam'
@@ -16,11 +16,10 @@ const shazamService = new ShazamService()
 const recordingInterval = ref<number | undefined>(undefined)
 
 watch(audioChunks, async (value) => {
-  if (value.length > 10) {
-    clearInterval(recordingInterval.value)
-    return
-  } else {
+  if (value.length <= 10) {
     sendAudio(value[value.length - 1])
+  } else {
+    clearInterval(recordingInterval.value)
   }
 })
 
@@ -31,8 +30,6 @@ function onClickRecord() {
     startRecording()
   }, 4000)
 }
-
-const loadingDetect = ref(false)
 
 const queryParams: {
   identifier: string | undefined
@@ -45,21 +42,15 @@ const queryParams: {
 }
 
 async function sendAudio(audioChunk: Blob) {
-  loadingDetect.value = true
+  const audioBase64 = await audioChunksToBase64([audioChunk])
+  const response = await shazamService.detect(audioBase64, queryParams)
+  queryParams.identifier = response.tagid
+  queryParams.timestamp = response.timestamp
 
-  try {
-    const audioBase64 = await audioChunksToBase64([audioChunk])
-    const response = await shazamService.detect(audioBase64, queryParams)
-    queryParams.identifier = response.tagid
-    queryParams.timestamp = response.timestamp
-
-    if (response.matches.length > 0) {
-      trackStore.setTrack(response.track)
-      clearInterval(recordingInterval.value)
-      router.push('/guess')
-    }
-  } finally {
-    loadingDetect.value = false
+  if (response.matches.length > 0) {
+    trackStore.setTrack(response.track)
+    clearInterval(recordingInterval.value)
+    router.push('/guess')
   }
 }
 
