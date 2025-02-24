@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import router from '@/router'
 import { Hint, type Guess } from '@/types/guess'
 
 import { useTrackDataStore } from '@/stores/track-data'
 
 const trackStore = useTrackDataStore()
+if (!trackStore.track) {
+  router.push('/')
+}
 
 const guesses = ref<Guess[]>([])
 
