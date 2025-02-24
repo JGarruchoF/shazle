@@ -7,6 +7,9 @@ export default function useRecord() {
   const chunks: Blob[] = []
 
   async function startRecording() {
+    if (isRecording.value) {
+      return
+    }
     const stream = await navigator.mediaDevices.getUserMedia({
       audio: true,
     })
