@@ -32,7 +32,7 @@ function guessYear(guess: string) {
     hint = Hint.CORRECT
   }
 
-  guesses.value.push({ year: guessYear, hint })
+  guesses.value.unshift({ year: guessYear, hint })
   guessInput.value = ''
   if (hint === Hint.CORRECT) {
     guessed.value = true
