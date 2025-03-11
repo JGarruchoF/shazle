@@ -4,7 +4,7 @@ import router from '@/router'
 import { Hint, type Guess } from '@/types/guess'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { ChevronRight } from 'lucide-vue-next'
+import { ChevronRight, MoveUp, MoveDown, Crown } from 'lucide-vue-next'
 import { useTrackDataStore } from '@/stores/track-data'
 
 const trackStore = useTrackDataStore()
@@ -60,7 +60,11 @@ function guessYear(guess: string) {
       class="mb-2 flex h-10 justify-between rounded border border-secondary p-2"
     >
       <div>{{ guess.year }}</div>
-      <div>{{ guess.hint }}</div>
+      <div>
+        <MoveUp v-if="guess.hint === Hint.LOW" class="text-secondary" />
+        <MoveDown v-else-if="guess.hint === Hint.HIGH" class="text-primary" />
+        <Crown v-else class="text-accent" />
+      </div>
     </div>
   </div>
   <div v-show="guessed" class="mt-5 flex flex-col items-center">
