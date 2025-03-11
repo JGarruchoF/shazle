@@ -2,7 +2,9 @@
 import { ref } from 'vue'
 import router from '@/router'
 import { Hint, type Guess } from '@/types/guess'
-
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { ChevronRight } from 'lucide-vue-next'
 import { useTrackDataStore } from '@/stores/track-data'
 
 const trackStore = useTrackDataStore()
@@ -39,71 +41,32 @@ function guessYear(guess: string) {
 </script>
 
 <template>
-  <div class="container">
-    <h2 class="text-center">¿De qué año es la cancion que estás escuchando?</h2>
-    <div class="game">
-      <input
-        v-model="guessInput"
-        :disabled="guessed"
-        class="input"
-        @keydown.enter="guessYear(guessInput)"
-      />
-      <div class="guesses">
-        <div v-for="(guess, index) in guesses" :key="index" class="guess">
-          <div>{{ guess.year }}</div>
-          <div>{{ guess.hint }}</div>
-        </div>
-      </div>
-      <div v-show="guessed" class="guessed">
-        <h3>{{ trackStore.track?.title }} - {{ trackStore.track?.subtitle }}</h3>
-        <img :src="trackStore.track?.images.coverart" alt="cover" class="cover" />
-      </div>
+  <h1 class="mb-8 text-center text-3xl">¿De qué año es la cancion que estás escuchando?</h1>
+  <div class="mb-2 flex w-full items-center">
+    <Input
+      v-model="guessInput"
+      :disabled="guessed"
+      class="h-10 flex-grow rounded border border-primary p-2"
+      @keydown.enter="guessYear(guessInput)"
+    />
+    <Button @click="guessYear(guessInput)" :disabled="guessed" size="icon" class="ml-2 bg-primary">
+      <ChevronRight />
+    </Button>
+  </div>
+  <div class="min-h-[120px] w-full overflow-y-auto">
+    <div
+      v-for="(guess, index) in guesses"
+      :key="index"
+      class="mb-2 flex h-10 justify-between rounded border border-secondary p-2"
+    >
+      <div>{{ guess.year }}</div>
+      <div>{{ guess.hint }}</div>
     </div>
   </div>
+  <div v-show="guessed" class="mt-5 flex flex-col items-center">
+    <h3 class="text-xl font-semibold">
+      {{ trackStore.track?.title }} - {{ trackStore.track?.subtitle }}
+    </h3>
+    <img :src="trackStore.track?.images.coverart" alt="cover" class="mt-4 h-52 w-52 object-cover" />
+  </div>
 </template>
-<style lang="css" scoped>
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 100%;
-  overflow: auto;
-}
-.input {
-  height: 24px;
-  margin: 20px 0;
-}
-.cover {
-  width: 200px;
-  height: 200px;
-  object-fit: cover;
-  margin-top: 20px;
-}
-.game {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-.guesses {
-  overflow: auto;
-  max-height: 300px;
-}
-.guessed {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  overflow: auto;
-}
-.guess {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 8px;
-  padding: 8px;
-  font-size: 16px;
-  border: rgba(15, 169, 255, 0.4) 1px solid;
-}
-.text-center {
-  text-align: center;
-}
-</style>
