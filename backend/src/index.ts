@@ -28,4 +28,6 @@ app.use("/shazam/*", async (c) => {
   return res;
 });
 
+app.notFound((c) => c.redirect("/"));
+
 export default app;
