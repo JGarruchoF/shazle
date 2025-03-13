@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "backend",
+  "name": "shazle",
   "main": "src/index.ts",
   "compatibility_date": "2025-03-13",
   "assets": { "directory": "../frontend/dist" }
