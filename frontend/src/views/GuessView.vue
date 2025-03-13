@@ -1,41 +1,41 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import router from '@/router'
-import { Hint, type Guess } from '@/types/guess'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { ChevronRight, MoveUp, MoveDown, Crown } from 'lucide-vue-next'
-import { useTrackDataStore } from '@/stores/track-data'
+import { ref } from 'vue';
+import router from '@/router';
+import { Hint, type Guess } from '@/types/guess';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { ChevronRight, MoveUp, MoveDown, Crown } from 'lucide-vue-next';
+import { useTrackDataStore } from '@/stores/track-data';
 
-const trackStore = useTrackDataStore()
+const trackStore = useTrackDataStore();
 if (!trackStore.track) {
-  router.push('/')
+  router.push('/');
 }
 
-const guesses = ref<Guess[]>([])
+const guesses = ref<Guess[]>([]);
 
-const guessInput = ref('')
-const guessed = ref(false)
+const guessInput = ref('');
+const guessed = ref(false);
 
 function guessYear(guess: string) {
-  if (!trackStore.releaseDate) return
-  const guessYear = parseInt(guess.trim(), 10)
+  if (!trackStore.releaseDate) return;
+  const guessYear = parseInt(guess.trim(), 10);
 
-  if (isNaN(guessYear)) return
+  if (isNaN(guessYear)) return;
 
-  let hint: Hint
+  let hint: Hint;
   if (guessYear < trackStore.releaseDate) {
-    hint = Hint.LOW
+    hint = Hint.LOW;
   } else if (guessYear > trackStore.releaseDate) {
-    hint = Hint.HIGH
+    hint = Hint.HIGH;
   } else {
-    hint = Hint.CORRECT
+    hint = Hint.CORRECT;
   }
 
-  guesses.value.unshift({ year: guessYear, hint })
-  guessInput.value = ''
+  guesses.value.unshift({ year: guessYear, hint });
+  guessInput.value = '';
   if (hint === Hint.CORRECT) {
-    guessed.value = true
+    guessed.value = true;
   }
 }
 </script>

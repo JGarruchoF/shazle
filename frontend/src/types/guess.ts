@@ -1,6 +1,6 @@
 export interface Guess {
-  year: number
-  hint: Hint
+  year: number;
+  hint: Hint;
 }
 
 export enum Hint {

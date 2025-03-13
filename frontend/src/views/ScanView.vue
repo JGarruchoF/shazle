@@ -1,63 +1,63 @@
 <script setup lang="ts">
-import { ref, watch, onBeforeUnmount } from 'vue'
-import router from '@/router'
-import useRecord from '@/composables/use-record'
-import ShazamService from '@/services/shazam'
-import { audioChunksToBase64 } from '@/utils/audio-utils'
-import { Button } from '@/components/ui/button'
+import { ref, watch, onBeforeUnmount } from 'vue';
+import router from '@/router';
+import useRecord from '@/composables/use-record';
+import ShazamService from '@/services/shazam';
+import { audioChunksToBase64 } from '@/utils/audio-utils';
+import { Button } from '@/components/ui/button';
 
-import { useTrackDataStore } from '@/stores/track-data'
+import { useTrackDataStore } from '@/stores/track-data';
 
-const trackStore = useTrackDataStore()
+const trackStore = useTrackDataStore();
 
-const { isRecording, startRecording, stopRecording, audioChunks } = useRecord()
+const { isRecording, startRecording, stopRecording, audioChunks } = useRecord();
 
-const shazamService = new ShazamService()
+const shazamService = new ShazamService();
 
-const recordingInterval = ref<number | undefined>(undefined)
+const recordingInterval = ref<number | undefined>(undefined);
 
 watch(audioChunks, async (value) => {
   if (value.length <= 10) {
-    sendAudio(value[value.length - 1])
+    sendAudio(value[value.length - 1]);
   } else {
-    clearInterval(recordingInterval.value)
+    clearInterval(recordingInterval.value);
   }
-})
+});
 
 function onClickRecord() {
-  startRecording()
+  startRecording();
   recordingInterval.value = setInterval(async () => {
-    stopRecording()
-    startRecording()
-  }, 4000)
+    stopRecording();
+    startRecording();
+  }, 4000);
 }
 
 const queryParams: {
-  identifier: string | undefined
-  timestamp: number | undefined
-  samplems: string | undefined
+  identifier: string | undefined;
+  timestamp: number | undefined;
+  samplems: string | undefined;
 } = {
   identifier: undefined,
   timestamp: undefined,
   samplems: undefined,
-}
+};
 
 async function sendAudio(audioChunk: Blob) {
-  const audioBase64 = await audioChunksToBase64([audioChunk])
-  const response = await shazamService.detect(audioBase64, queryParams)
-  queryParams.identifier = response.tagid
-  queryParams.timestamp = response.timestamp
+  const audioBase64 = await audioChunksToBase64([audioChunk]);
+  const response = await shazamService.detect(audioBase64, queryParams);
+  queryParams.identifier = response.tagid;
+  queryParams.timestamp = response.timestamp;
 
   if (response.matches.length > 0) {
-    trackStore.setTrack(response.track)
-    clearInterval(recordingInterval.value)
-    router.push('/guess')
+    trackStore.setTrack(response.track);
+    clearInterval(recordingInterval.value);
+    router.push('/guess');
   }
 }
 
 onBeforeUnmount(() => {
-  clearInterval(recordingInterval.value)
-})
+  clearInterval(recordingInterval.value);
+});
 </script>
 
 <template>
