@@ -32,14 +32,16 @@ To start playing Shazle, you need to start both the backend and frontend. Run th
 1. Start the backend:
 
 ```bash
-npm run start
+npm run build-only
 ```
 
 2. Start the frontend:
 
 ```bash
-npm run dev
+npm run dev:back
 ```
+
+3. Open app in browser [127.0.0.1:8787](http://127.0.0.1:8787)
 
 ## License
 
