@@ -14,7 +14,7 @@ export default function useRecord() {
       audio: true,
     })
     mediaRecorder.value = new MediaRecorder(stream, {
-      mimeType: 'audio/webm;codecs=pcm',
+      mimeType: 'audio/webm',
       audioBitsPerSecond: 44100,
     })
     mediaRecorder.value.ondataavailable = (event) => {
