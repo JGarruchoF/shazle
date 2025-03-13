@@ -1,18 +1,15 @@
 {
   "name": "backend",
-  "version": "0.0.0",
-  "main": "app.js",
-  "type": "module",
   "scripts": {
-    "dev": "node app.js --watch",
-    "start": "node app.js"
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy --minify"
   },
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
-    "dotenv": "^16.4.7",
-    "express": "^4.21.2",
-    "http-proxy-middleware": "^3.0.3"
+    "@hono/node-server": "^1.13.8",
+    "hono": "^4.7.4"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250214.0",
+    "wrangler": "^4.0.0"
   }
 }
