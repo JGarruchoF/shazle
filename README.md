@@ -1,6 +1,6 @@
 # Shazle
 
-Shazle is a game that combines Shazam and Heardle. In Shazle, you scan a song and try to guess its release date. [Try it](https://shazle.onrender.com/) and test your music knowledge.
+Shazle is a game that combines Shazam and Heardle. In Shazle, you scan a song and try to guess its release date. [Try it](https://shazle.thaeazzy.workers.dev/) and test your music knowledge.
 
 ## Installation
 
@@ -19,7 +19,7 @@ cd shazle
 npm install
 ```
 
-4. Create a `.env` file in the backend directory and add your apidojo's Shazam API key from (RapidAPI)[https://rapidapi.com/apidojo/api/shazam] :
+4. Create a `.env` file in the backend directory and add your apidojo's Shazam API key from [RapidAPI](https://rapidapi.com/apidojo/api/shazam) :
 
 ```bash
 SHAZAM_API_KEY=your_shazam_api_key
