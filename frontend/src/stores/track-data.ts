@@ -1,27 +1,13 @@
 import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
-import type { Track } from '@/types/shazam';
+import type { TrackData } from '@/types/shazam';
 
 export const useTrackDataStore = defineStore('trackData', () => {
-  const track = ref<null | Track>(null);
-  const count = ref(0);
+  const currentTrackData = ref<null | TrackData>(null);
 
-  const releaseDate = computed<null | number>(() => {
-    const yearString = track.value?.sections
-      .find((section) => section.type === 'SONG')
-      ?.metadata.find((metadata) => metadata.title === 'Released')?.text;
-
-    if (yearString) {
-      return parseInt(yearString, 10);
-    } else {
-      return null;
-    }
-  });
-
-  function setTrack(newTrack: Track) {
-    track.value = newTrack;
-    count.value++;
+  function setTrack(newTrackData: TrackData) {
+    currentTrackData.value = newTrackData;
   }
 
-  return { track, releaseDate, setTrack, count };
+  return { currentTrackData, setTrack };
 });
