@@ -13,7 +13,6 @@ app.use("/shazam/*", async (c) => {
     .map(([key, value]) => `${key}=${value}`)
     .join("&");
 
-  console.log(`https://shazam.p.rapidapi.com/${apiPath}?${encodeURI(queries)}`);
   const res = await proxy(
     `https://shazam.p.rapidapi.com/${apiPath}?${encodeURI(queries)}`,
     {
