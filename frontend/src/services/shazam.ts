@@ -1,23 +1,31 @@
-import type { ShazamData } from '@/types/shazam';
-import { BaseService } from '@/services/base-service';
+import type { ShazamData, Timestamp, TagId } from '@/types/shazam';
+import type { Base64String } from '@/types/common';
+import { api } from '@/services/api';
 
-export default class ShazamService extends BaseService {
-  baseUrl = '/shazam/';
-  headers = {
-    Accept: 'application/json',
-  };
-  async detect(payload: string, queryParams: any): Promise<ShazamData> {
-    const filteredQueryParams = Object.fromEntries(
-      Object.entries(queryParams).filter(([_, value]) => value !== undefined),
-    );
-    const queryString = new URLSearchParams({
-      ...filteredQueryParams,
-      timezone: 'America/Chicago',
-      locale: 'en-US',
-    }).toString();
-    const url = `${this.baseUrl}songs/v2/detect?${queryString}`;
+export interface QueryParams {
+  identifier?: TagId;
+  timestamp?: Timestamp;
+}
 
-    const headers = { ...this.headers, 'Content-Type': 'text/plain' };
-    return this.post(url, payload, headers);
+export default function useShazamService() {
+  const baseUrl = '/shazam/';
+  async function detect(payload: Base64String, queryParams: QueryParams): Promise<ShazamData> {
+    const { identifier, timestamp } = queryParams;
+
+    const url = new URL(`${baseUrl}songs/v2/detect`, window.location.origin);
+    url.searchParams.append('timezone', 'America/Chicago');
+    url.searchParams.append('locale', 'en-US');
+
+    if (identifier) {
+      url.searchParams.append('identifier', identifier);
+    }
+    if (timestamp) {
+      url.searchParams.append('timestamp', timestamp.toString());
+    }
+
+    return api.post<ShazamData>(url, payload, { 'Content-Type': 'text/plain' });
   }
+  return {
+    detect,
+  };
 }

@@ -1,3 +1,6 @@
+export type TagId = string;
+export type Timestamp = number;
+
 interface Match {
   id: string;
   offset: number;
@@ -123,8 +126,8 @@ export interface Track {
 
 export interface ShazamData {
   matches: Match[];
-  timestamp: number;
+  timestamp: Timestamp;
   timezone: string;
-  tagid: string;
+  tagid: TagId;
   track: Track;
 }
