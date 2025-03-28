@@ -1,69 +1,9 @@
 <script setup lang="ts">
-import { ref, watch, onBeforeUnmount } from 'vue';
-import router from '@/router';
-import useRecord from '@/composables/use-record';
-import ShazamService from '@/services/shazam';
-import { audioChunksToBase64 } from '@/utils/audio-utils';
+import useScan from '@/composables/use-scan';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-vue-next';
 
-import { useTrackDataStore } from '@/stores/track-data';
-
-const trackStore = useTrackDataStore();
-
-const { isRecording, startRecording, stopRecording, audioChunks } = useRecord();
-
-const shazamService = new ShazamService();
-
-const recordingInterval = ref<number | undefined>(undefined);
-
-watch(audioChunks, async (value) => {
-  if (value.length <= 10) {
-    sendAudio(value[value.length - 1]);
-  } else {
-    clearInterval(recordingInterval.value);
-  }
-});
-
-function onClickRecord() {
-  startRecording();
-  recordingInterval.value = setInterval(async () => {
-    stopRecording();
-    startRecording();
-  }, 4000);
-}
-
-function onClickStop() {
-  clearInterval(recordingInterval.value);
-  stopRecording();
-}
-
-const queryParams: {
-  identifier: string | undefined;
-  timestamp: number | undefined;
-  samplems: string | undefined;
-} = {
-  identifier: undefined,
-  timestamp: undefined,
-  samplems: undefined,
-};
-
-async function sendAudio(audioChunk: Blob) {
-  const audioBase64 = await audioChunksToBase64([audioChunk]);
-  const response = await shazamService.detect(audioBase64, queryParams);
-  queryParams.identifier = response.tagid;
-  queryParams.timestamp = response.timestamp;
-
-  if (response.matches.length > 0) {
-    trackStore.setTrack(response.track);
-    clearInterval(recordingInterval.value);
-    router.push('/guess');
-  }
-}
-
-onBeforeUnmount(() => {
-  clearInterval(recordingInterval.value);
-});
+const { isRecording, startScan, stopScan } = useScan();
 </script>
 
 <template>
@@ -71,11 +11,11 @@ onBeforeUnmount(() => {
   <div class="m-auto flex flex-col justify-center space-y-12">
     <Button
       class="neon-button rounded-full bg-gradient-to-br from-slate-800 to-slate-900 text-xl text-white"
-      @click="onClickRecord"
+      @click="startScan"
     >
       {{ isRecording ? 'Escuchando...' : 'Escanear' }}
     </Button>
-    <Button class="mx-auto w-9 rounded-full bg-slate-600 text-white" @click="onClickStop">
+    <Button class="mx-auto w-9 rounded-full bg-slate-600 text-white" @click="stopScan">
       <X />
     </Button>
   </div>

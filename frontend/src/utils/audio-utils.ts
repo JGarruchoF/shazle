@@ -1,3 +1,5 @@
+import type { Base64String } from '@/types/common';
+
 export async function convertToPCM(arrayBuffer: ArrayBuffer) {
   const audioContext = new window.AudioContext({
     sampleRate: 44100,
@@ -23,7 +25,7 @@ export function arrayBufferToBase64(buffer: ArrayBuffer) {
   return btoa(binary);
 }
 
-export async function audioChunksToBase64(audioChunks: Blob[]) {
+export async function audioChunksToBase64(audioChunks: Blob[]): Promise<Base64String> {
   const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
   const arrayBuffer = await audioBlob.arrayBuffer();
   const audioBuffer = await convertToPCM(arrayBuffer);
