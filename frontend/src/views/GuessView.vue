@@ -22,12 +22,7 @@ const { guesses, currentGuess, isGuessed, submitGuess } = useGuess(currentTrackD
 
 <template>
   <div class="flex">
-    <Button
-      @click="() => router.push('/')"
-      :disabled="isGuessed"
-      size="icon"
-      class="absolute left-4 top-4 bg-secondary"
-    >
+    <Button @click="() => router.push('/')" size="icon" class="absolute left-4 top-4 bg-secondary">
       <ChevronLeft />
     </Button>
   </div>
