@@ -2,6 +2,11 @@
 import useScan from '@/composables/use-scan';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-vue-next';
+import { useTrackDataStore } from '@/stores/track-data';
+
+const { setTrack } = useTrackDataStore();
+// Set the track to null when the component is mounted
+setTrack(null);
 
 const { isRecording, startScan, stopScan } = useScan();
 </script>

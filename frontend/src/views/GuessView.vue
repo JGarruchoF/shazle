@@ -4,7 +4,7 @@ import router from '@/router';
 import { Hint } from '@/types/guess';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { ChevronRight, MoveUp, MoveDown, Crown } from 'lucide-vue-next';
+import { ChevronRight, ChevronLeft, MoveUp, MoveDown, Crown } from 'lucide-vue-next';
 import useGuess from '@/composables/use-guess';
 import { useTrackDataStore } from '@/stores/track-data';
 
@@ -21,6 +21,16 @@ const { guesses, currentGuess, isGuessed, submitGuess } = useGuess(currentTrackD
 </script>
 
 <template>
+  <div class="flex">
+    <Button
+      @click="() => router.push('/')"
+      :disabled="isGuessed"
+      size="icon"
+      class="absolute left-4 top-4 bg-secondary"
+    >
+      <ChevronLeft />
+    </Button>
+  </div>
   <h1 class="mb-8 text-center text-3xl">¿De qué año es la canción que estás escuchando?</h1>
   <div class="mb-2 flex w-full items-center">
     <Input
@@ -56,6 +66,10 @@ const { guesses, currentGuess, isGuessed, submitGuess } = useGuess(currentTrackD
     <h3 class="text-xl font-semibold">
       {{ currentTrackData?.title }} - {{ currentTrackData?.subtitle }}
     </h3>
-    <img :src="currentTrackData?.images.coverart" alt="cover" class="mt-4 h-52 w-52 object-cover" />
+    <img
+      :src="currentTrackData?.images?.coverart"
+      alt="cover"
+      class="mt-4 h-52 w-52 object-cover"
+    />
   </div>
 </template>
