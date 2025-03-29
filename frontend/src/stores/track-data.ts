@@ -1,11 +1,11 @@
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import type { TrackData } from '@/types/shazam';
 
 export const useTrackDataStore = defineStore('trackData', () => {
-  const currentTrackData = ref<null | TrackData>(null);
+  const currentTrackData = ref<null | TrackData>();
 
-  function setTrack(newTrackData: TrackData) {
+  function setTrack(newTrackData: TrackData | null) {
     currentTrackData.value = newTrackData;
   }
 

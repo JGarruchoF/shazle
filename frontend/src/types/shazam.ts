@@ -29,6 +29,17 @@ interface UrlParams {
   '{trackartist}': string;
 }
 
+interface Metadata {
+  title: string;
+  text: string;
+}
+
+interface Section {
+  type: string;
+  tabname: string;
+  metadata: Metadata[];
+}
+
 export interface TrackData {
   title: string;
   subtitle: string;
@@ -37,6 +48,7 @@ export interface TrackData {
   artists: Artist[];
   genres: Genre;
   urlparams: UrlParams;
+  sections: Section[];
 }
 
 export interface ShazamData {
