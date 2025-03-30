@@ -4,7 +4,7 @@ import router from '@/router';
 import { Hint } from '@/types/guess';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { ChevronRight, ChevronLeft, MoveUp, MoveDown, Crown } from 'lucide-vue-next';
+import { ChevronRight, ChevronLeft, MoveUp, MoveDown, Crown, RotateCcw } from 'lucide-vue-next';
 import useGuess from '@/composables/use-guess';
 import { useTrackDataStore } from '@/stores/track-data';
 
@@ -64,7 +64,14 @@ const { guesses, currentGuess, isGuessed, submitGuess } = useGuess(currentTrackD
     <img
       :src="currentTrackData?.images?.coverart"
       alt="cover"
-      class="mt-4 h-52 w-52 object-cover"
+      class="my-4 h-52 w-52 object-cover"
     />
+    <h3>¿Quieres jugar de nuevo?</h3>
+    <Button
+      class="mx-auto mt-2 w-9 rounded-full bg-slate-600 text-white"
+      @click="() => router.push('/')"
+    >
+      <RotateCcw />
+    </Button>
   </div>
 </template>
